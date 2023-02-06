@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Clientes";
+}
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<div>
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            <div class="pull-left">
+                <a asp-action="Create" class="btn btn-primary">
+                    <span title="Register New" class="fas fa-plus"></span> Register New
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="panel panel-default">
+    <table id="myDataTable" class="table table-bordered table-striped table-hover table-responsive" style="white-space:nowrap">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CNPJ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <!-- JS -->
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            initDataTable($('#myDataTable'), 0, 'asc', false, true, 10, false, true, false, 'landscape', 'rptHdr');  /* Initialize Table */
+
+
+            function initDataTable($table, sortCol, sortOrder, enFilter, enPaginate, dplyLength, enInfo, autoWidth, enTblTools, pdfOrientation, fileName) {
+
+                var dom = (enTblTools) ? 'T' : '';
+
+                var oTable = $table.dataTable({
+                    'ajax': {
+                        'url': '/Clientes/GetClientes',
+                        'type': 'POST',
+                        'dataType': 'json'
+                    },
+                    'columns': [
+                        { 'data': 'nomeEmpresarial' }, { 'data': 'cnpjNumInscricao' }
+                    ],
+                    "bDestroy": true,
+                    "bProcessing": true,
+                    "bFilter": enFilter,
+                    "bSort": true,
+                    "bSortClasses": true,
+                    "bPaginate": enPaginate,
+                    "sPaginationType": "full_numbers",
+                    "iDisplayLength": dplyLength                    
+                });
+                /* If is IE then avoid setting the sticky headers */
+                if (!navigator.userAgent.match(/msie/i) && enPaginate == false) {
+                    new $.fn.dataTable.FixedHeader(oTable);
+                }
+
+                return oTable
+            }
+        });
+
+    </script>
+}
